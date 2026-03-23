@@ -1,15 +1,26 @@
 pipeline {
     agent any
 
+    triggers {
+        pollSCM('H/2 * * * *')
+    }
+
     stages {
-        stage('Build') {
-            steps {
-                echo 'Building...'
-            }
-        }
         stage('Test') {
             steps {
                 echo 'Testing...'
+                sh '''
+                docker run --rm \
+                  -v $PWD:/app \
+                  -w /app \
+                  python:3.11-slim \
+                  sh -c "pip install -r requirements.txt && pytest"
+                '''
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building...'
             }
         }
         stage('Deploy') {
