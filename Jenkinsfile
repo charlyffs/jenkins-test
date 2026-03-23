@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+    docker {
+      image 'python:3.11-slim'
+      args '-v /var/run/docker.sock:/var/run/docker.sock'
+    }
+  }
 
     triggers {
         pollSCM('H/2 * * * *')
@@ -8,14 +13,9 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                echo 'Testing...'
-                sh 'ls'
                 sh '''
-                docker run --rm \
-                  -v $PWD:/app \
-                  -w /app \
-                  python:3.11-slim \
-                  sh -c "ls && pip install -r requirements.txt && pytest"
+                  ls
+                  pip install -r requirements.txt && pytest
                 '''
             }
         }
