@@ -15,7 +15,7 @@ pipeline {
             steps {
                 sh '''
                   ls
-                  pip install -r requirements.txt && pytest
+                  pip install -r requirements.txt && python3 -m pytest
                 '''
             }
         }
