@@ -15,7 +15,7 @@ pipeline {
                   -v $PWD:/app \
                   -w /app \
                   python:3.11-slim \
-                  sh -c "pip install -r requirements.txt && pytest"
+                  sh -c "ls && pip install -r requirements.txt && pytest"
                 '''
             }
         }
