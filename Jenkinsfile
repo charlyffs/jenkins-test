@@ -9,6 +9,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
+                sh 'ls'
                 sh '''
                 docker run --rm \
                   -v $PWD:/app \
