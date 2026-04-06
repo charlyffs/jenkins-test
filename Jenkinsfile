@@ -22,6 +22,7 @@ pipeline {
                 script {
                     def shortCommit = env.GIT_COMMIT.take(7)
                     def imageTag = "my-image:${shortCommit}"
+                    sh 'apt update && apt install -y docker.io'
                     sh 'docker build -t ${imageTag} .'
                     echo 'Built image with tag ${imageTag}'
                 }
