@@ -7,12 +7,15 @@ pipeline {
 
     stages {
         stage('Test') {
+
             agent {
                 docker {
                     image 'python:3.11-slim'
-                    args 'u root -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp'
+                    args '-e HOME=/tmp'
                 }
             }
+
+            echo 'Testing...'
             steps {
                 sh 'pip install -r requirements.txt && python3 -m pytest'
             }
