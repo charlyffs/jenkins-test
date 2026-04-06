@@ -25,16 +25,16 @@ pipeline {
                 echo 'Building...'
                 script {
                     def shortCommit = env.GIT_COMMIT.take(7)
-                    def imageTag = "my-image:${shortCommit}"
-                    sh "docker build -t ${imageTag} ."
-                    echo "Built image with tag ${imageTag}"
+                    env.IMAGE_TAG = "uvicorn-app-test:${shortCommit}"
+                    sh "docker build -t $IMAGE_TAG ."
+                    echo "Built image with tag $IMAGE_TAG"
                 }
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
-                sh "docker run -d -p 8000:8000 ${imageTag}"
+                sh "docker run -d -p 8000:8000 $IMAGE_TAG"
             }
         }
     }
