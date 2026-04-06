@@ -1,17 +1,16 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.11-slim'
-            args '-v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp'
-        }
-    }
-
     triggers {
         pollSCM('H/2 * * * *')
     }
 
     stages {
         stage('Test') {
+            agent {
+                docker {
+                    image 'python:3.11-slim'
+                    args 'u root -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp'
+                }
+            }
             steps {
                 sh 'pip install -r requirements.txt && python3 -m pytest'
             }
@@ -22,7 +21,6 @@ pipeline {
                 script {
                     def shortCommit = env.GIT_COMMIT.take(7)
                     def imageTag = "my-image:${shortCommit}"
-                    sh 'apt update && apt install -y docker.io'
                     sh 'docker build -t ${imageTag} .'
                     echo 'Built image with tag ${imageTag}'
                 }
