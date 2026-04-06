@@ -15,8 +15,8 @@ pipeline {
                 }
             }
 
-            echo 'Testing...'
             steps {
+                echo 'Testing...'
                 sh 'pip install -r requirements.txt && python3 -m pytest'
             }
         }
