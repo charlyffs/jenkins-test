@@ -14,7 +14,6 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
-                  ls
                   pip install -r requirements.txt && python3 -m pytest
                 '''
             }
@@ -22,11 +21,22 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building...'
+                def shortCommit = env.GIT_COMMIT.take(7)
+                def imageTag = "my-image:${shortCommit}"
+
+                sh '''
+                  docker build -t ${imageTag} .
+                '''
+
+                echo 'Built image with tag ${imageTag}'
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
+                sh '''
+                  docker run -d -p 8000:8000 ${imageTag}
+                '''
             }
         }
     }
